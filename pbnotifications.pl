@@ -2,7 +2,7 @@
 $VERSION = "201408a";
 
 # Simple script to push notifications and mentions to PushBullet
-# 
+#
 # Heavily inspired by/based on the work of:
 # Derrick Staples <https://github.com/broiledmeat/pbee>
 # Thorsten Leemhuis <http://www.leemhuis.info/files/fnotify/fnotify>
@@ -71,7 +71,7 @@ sub _push {
 
 sub priv_msg {
     my ($server,$msg,$nick,$address,$target) = @_;
-    my %options = ("type" => "note", "title" => "PM", "body" => $nick . ": " . $msg);
+    my %options = ("type" => "note", "title" => "[" . $server->{tag} . "] Private Message", "body" => $nick . ": " . $msg);
     if (_push(\%options)) {
         print("Pushed $nick $msg");
     }
@@ -79,7 +79,7 @@ sub priv_msg {
 sub hilight {
     my ($dest, $text, $stripped) = @_;
     if ($dest->{level} & MSGLEVEL_HILIGHT) {
-        my %options = ("type" => "note", "title" => "Mention", "body" => $stripped);
+        my %options = ("type" => "note", "title" => "[" . $dest->{server}->{tag} . "] Highlight", "body" => $stripped);
         if (_push(\%options)) {
             print("Pushed $stripped");
         }
@@ -90,4 +90,3 @@ initialize();
 Irssi::signal_add("setup changed", "initialize");
 Irssi::signal_add_last("message private", "priv_msg");
 Irssi::signal_add_last("print text", "hilight");
-
